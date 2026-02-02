@@ -37,7 +37,7 @@ use_advanced = st.sidebar.checkbox("Use advanced model")
 
  # Create an OpenAI client.
 openai_client = OpenAI(api_key=st.secrets["openai_api_key"])
-antrhopic_client = Anthropic(api_key=st.secrets["clade_api_key"])
+antrhopic_client = Anthropic(api_key=st.secrets["claude_api_key"])
 
 def read_url_content(url):
     try:
