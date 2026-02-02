@@ -19,7 +19,7 @@ summary_type = st.sidebar.radio(
         "Summarize the url content in 2 connecting paragraphs",
         "Summarize the url content in 5 bullet points"
     ]
-)s
+)
 
 output_language = st.sidebar.selectbox(
       "Output language:",
