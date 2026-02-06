@@ -2,4 +2,3 @@ streamlit
 openai
 anthropic
 PyPDF2
-BeautifulSoup
