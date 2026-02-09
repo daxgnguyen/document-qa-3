@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 # Show title and description.
 st.title("Chatbot")
 st.write(
-    "Talk to GPT! "
+    "Input up to two urls and get a response from your desired AI based on the URL's content! "
 )
 
 # LLM selection
