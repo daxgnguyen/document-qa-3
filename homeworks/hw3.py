@@ -103,4 +103,4 @@ if len(non_system) > 6:
     st.session_state.messages = [
         st.session_state.messages[0],
         {"role": "system", "content": f"Summary of earlier conversation: {summary}"}
-    ] + non_system[-6]
+    ] + non_system[-6:]
