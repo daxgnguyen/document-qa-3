@@ -21,6 +21,10 @@ if 'openai_client' not in st.session_state:
 
 st.write(f"Collection count: {collection.count()}")
 
+# Model Selection
+with st.sidebar:
+     use_advanced = st.toggle("Use Advanced Model")
+
 # Show title and description.
 st.title("Chatbot")
 st.write(
@@ -76,7 +80,7 @@ if prompt := st.chat_input("Ask about the news articles..."):
     llm_messages = [{"role": "system", "content": augmented_system}] + st.session_state.messages
 
     stream = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="claude-haiku-4-5-20251001" if use_advanced else "gpt-4o-mini",
         messages=llm_messages,
         stream=True
     )
