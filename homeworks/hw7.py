@@ -1,6 +1,7 @@
 import streamlit as st
 import sys
 from openai import OpenAI
+from anthropic import Anthropic
 
 # Working with ChromaDB or Streamlit Community Cloud
 __import__('pysqlite3')
@@ -19,11 +20,15 @@ collection = st.session_state.HW4_VectorDB
 if 'openai_client' not in st.session_state:
     st.session_state.openai_client = OpenAI(api_key=st.secrets["openai_api_key"])
 
+# Create Anthropic Client
+if 'anthropic_client' not in st.session_state:
+    st.session_state.anthropic_client = Anthropic(api_key=st.secrets["claude_api_key"])
+
 st.write(f"Collection count: {collection.count()}")
 
 # Model Selection
 with st.sidebar:
-     use_advanced = st.toggle("Use Advanced Model")
+    use_advanced = st.toggle("Use Advanced Model (Claude)")
 
 # Show title and description.
 st.title("Chatbot")
@@ -48,6 +53,7 @@ if "messages" not in st.session_state:
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
+
 def get_n_results(prompt: str) -> int:
     p = prompt.lower()
     if "interesting" in p or "most" in p or "top" in p:
@@ -59,8 +65,7 @@ if prompt := st.chat_input("Ask about the news articles..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    client = st.session_state.openai_client
-    query_response = client.embeddings.create(
+    query_response = st.session_state.openai_client.embeddings.create(
         input=prompt,
         model='text-embedding-3-small'
     )
@@ -79,13 +84,24 @@ if prompt := st.chat_input("Ask about the news articles..."):
     augmented_system = system_content + f"\n\nRelevant news articles:{rag_context}"
     llm_messages = [{"role": "system", "content": augmented_system}] + st.session_state.messages
 
-    stream = client.chat.completions.create(
-        model="claude-haiku-4-5-20251001" if use_advanced else "gpt-4o-mini",
-        messages=llm_messages,
-        stream=True
-    )
-    with st.chat_message("assistant"):
-        response = st.write_stream(stream)
+    if use_advanced:
+        result = st.session_state.anthropic_client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=1024,
+            system=augmented_system,
+            messages=[m for m in llm_messages if m["role"] != "system"]
+        )
+        response = result.content[0].text
+        with st.chat_message("assistant"):
+            st.markdown(response)
+    else:
+        stream = st.session_state.openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=llm_messages,
+            stream=True
+        )
+        with st.chat_message("assistant"):
+            response = st.write_stream(stream)
 
     st.session_state.messages.append({"role": "assistant", "content": response})
 
