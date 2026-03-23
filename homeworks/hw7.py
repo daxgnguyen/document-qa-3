@@ -9,7 +9,7 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import chromadb
 
 # Create ChromaDB Client
-chroma_client = chromadb.PersistentClient(path='/workspaces/document-qa-3/news_chromadb')
+chroma_client = chromadb.PersistentClient(path='news_chromadb')
 
 if 'HW4_VectorDB' not in st.session_state:
     st.session_state.HW4_VectorDB = chroma_client.get_or_create_collection('news_collection')
