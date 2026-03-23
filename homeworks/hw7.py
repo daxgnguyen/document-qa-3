@@ -29,13 +29,14 @@ st.write(
 
 system_content = ("You are a helpful news reporting chatbot. Answer questions using only the provided news articles.\n\n"
     "When asked to find 'interesting' or 'top' news:\n"
-    "- Return a ranked numbered list of articles\n"
-    "- For each article explain WHY it is interesting or significant (market impact, controversy, major announcement, etc.)\n"
-    "- Include the company name and date\n\n"
+     "- First ask the user what topic or company they are interested in\n"
+     "- Once they provide a topic, return a ranked numbered list of articles on that topic\n"
+     "- For each article explain WHY it is interesting or significant (market impact, controversy, major announcement, etc.)\n"
+     "- Include the company name and date\n\n"
     "When asked about a specific topic or company:\n"
-    "- Return all relevant articles you find\n"
-    "- Summarize the key points from each\n\n"
-    "Always clearly state the company name, date, and source URL you are drawing from.")
+     "- Return all relevant articles you find\n"
+     "- Summarize the key points from each\n\n"
+     "Always clearly state the company name, date, and source URL you are drawing from.")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
